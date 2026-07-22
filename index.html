@@ -10,64 +10,66 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #000;
-            overflow: hidden;
-            color: white;
-        }
+    /* กำหนด font-size พื้นฐานตามความกว้างหน้าจอ (vw = Viewport Width) */
+    html {
+        /* ย่อ/ขยายตามขนาดจอ แต่ไม่ให้เล็กเกิน 12px หรือใหญ่เกิน 18px */
+        font-size: clamp(12px, 1.1vw, 18px); 
+    }
 
-        #canvas-container {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-        }
+    body {
+        font-family: 'Inter', sans-serif;
+        background: #000;
+        overflow: hidden;
+        color: white;
+    }
 
-        /* ให้ส่วน UI ซ้อนอยู่เหนือ Canvas และยอมให้เมาส์ทะลุไปหมุนกล้องด้านหลังได้ */
-        .ui-layer {
-            position: fixed;
-            z-index: 10;
-            pointer-events: none;
-        }
+    #canvas-container {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+    }
 
-        /* อนุญาตให้องค์ประกอบโต้ตอบได้ (ปุ่ม/ลิงก์) รับการคลิกได้ปกติ */
-        .interactive {
-            pointer-events: auto;
-        }
+    .ui-layer {
+        position: fixed;
+        z-index: 10;
+        pointer-events: none;
+    }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1rem;
-        }
-        .bg-ui{
-            display:flex;
-            justify-content:center;
-            align-items:center;
+    .interactive {
+        pointer-events: auto;
+    }
 
-            width:160px;
-            height:45px;
+    .glass {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1rem;
+    }
 
-            color:#fff;
-            font-size:16px;
-            font-family:sans-serif;
-            user-select:none;
+    /* ปรับ bg-ui ให้ใช้หน่วย rem/vw เพื่อให้ย่อ-ขยายตามหน้าจอ */
+    .bg-ui {
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-            transition:0.3s ease;
-        }
-     
-    </style>
+        width: clamp(100px, 12vw, 160px);   /* ย่อตามจอ */
+        height: clamp(32px, 3.5vw, 45px);   /* ย่อตามจอ */
 
-    </style>
-</head>
+        color: #fff;
+        font-size: clamp(0.75rem, 1vw, 1rem); /* ย่อตัวหนังสือตามจอ */
+        font-family: sans-serif;
+        user-select: none;
+        transition: 0.3s ease;
+        text-align: center;
+    }
+</style></head>
 
 <body>
 
@@ -81,34 +83,12 @@
             <h1 class="text-2xl font-semibold">
                 CMT6901
             </h1>
-            <div class="bg-ui">
-                กิจกรรมทำพานไหว้ครู
-            </div>
-            <div class="hidden md:flex gap-8">
-                <a href="#" onclick="switchToSet1(); return false;">HOME</a>
+
+                       <a href="#" onclick="switchToSet1(); return false;">HOME</a>
 
                 <a href="#" onclick="switchToSet2(); return false;">ACTIVITY</a>
-                ACTIVITY
-                </a>
                 <a href="#">PORTFOLIO</a>
 
-            </div>
-
-            <div class="flex gap-2">
-
-            <button onclick="handleCameraChange('wide')">
-                มุมกว้าง
-            </button>
-
-            <button onclick="setCameraView('medium')">
-                มุมกลาง
-            </button>
-
-            <button onclick="setCameraView('close')">
-                มุมใกล้
-            </button>
-
-            </div>
 
         </nav>
     </header>
