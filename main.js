@@ -35,7 +35,6 @@ function initSet1() {
     scene.background = new THREE.Color(0x1a1a1a);
 
     const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1.1, 5000);
-    camera.position.set(0, 5, 25);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -133,20 +132,30 @@ function initSet1() {
         return new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.15, metalness: 0.4, side: THREE.DoubleSide });
     }
 
-    function finalizeSceneConfiguration() {
-        if (modelGroup.children.length === 0) return;
-        modelGroup.position.set(0, 0, 0);
-        const box = new THREE.Box3().setFromObject(modelGroup);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
-        modelGroup.position.sub(center);
-        globalModelSize = Math.max(size.x, size.y, size.z);
-        camera.position.set(0, globalModelSize * 0.5, globalModelSize * 1.5);
-        controls.maxDistance = globalModelSize * 10;
-        controls.target.set(0, 0, 0);
-        controls.update();
-    }
+function finalizeSceneConfiguration() {
+    if (modelGroup.children.length === 0) return;
+    
+    modelGroup.position.set(0, 0, 0);
+    const box = new THREE.Box3().setFromObject(modelGroup);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    modelGroup.position.sub(center);
+    globalModelSize = Math.max(size.x, size.y, size.z);
+    
+    // ตั้งค่าระยะ Zoom สูงสุดไว้ป้องกันกล้องหลุดโฟกัส
+    controls.maxDistance = globalModelSize * 10;
 
+    // --- เพิ่มตำแหน่งกล้องที่คุณต้องการหลังจากโหลดโมเดลเสร็จที่นี่ ---
+    camera.position.set(31.89, -21.59, 14.63);
+    controls.target.set(4.85, -19.46, 30.71);
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.2; 
+    camera.fov = 20;
+
+    // อัปเดตกล้องและคอนโทรลเลอร์
+    camera.updateProjectionMatrix();
+    controls.update();
+}
     async function loadModelsFromSeverFolder() {
         try {
             const loadingManager = new THREE.LoadingManager();
@@ -291,7 +300,7 @@ function initSet2() {
     const targetLookAt = new THREE.Vector3(-1.50, 2.94, 0.00);  
 
     const camera = new THREE.PerspectiveCamera(10, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 50;
+    camera.position.z = 100;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -363,8 +372,7 @@ function initSet2() {
 
     // Background Planes
     const textureLoader = new THREE.TextureLoader();
-    const planeGeo = new THREE.PlaneGeometry(35, 35 * (window.innerHeight / window.innerWidth));
-
+    const planeGeo = new THREE.PlaneGeometry(50, 35);
     const bgTexture1 = textureLoader.load('background.png');
     const bgPlane1 = new THREE.Mesh(planeGeo, new THREE.MeshBasicMaterial({ map: bgTexture1, depthWrite: false }));
     bgPlane1.position.set(0, 0, -0.5); scene.add(bgPlane1);
